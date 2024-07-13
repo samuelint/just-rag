@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "langgraph-agent-template"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+authors = []
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "<=3.12.4,>=3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+pytest-watch = "^4.2.0"
+pytest-asyncio = "^0.23.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

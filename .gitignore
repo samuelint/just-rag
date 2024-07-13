@@ -1,0 +1,13 @@
+# Miscellaneous
+.git
+.env
+
+# Python
+.venv
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.pyi
+*.pyw
+*.pytest_cache
