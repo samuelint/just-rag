@@ -1,4 +1,4 @@
-from langgraph_agent_template.main import say_hello
+from rag_compare.main import say_hello
 
 
 def test_say_hello():

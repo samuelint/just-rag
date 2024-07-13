@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "langgraph-agent-template"
+name = "rag-compare"
 version = "0.1.0"
 description = ""
 readme = "README.md"
@@ -8,6 +8,9 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "<=3.12.4,>=3.10"
+langchain = "^0.2.7"
+langgraph = "^0.1.8"
+chromadb = "^0.5.4"
 
 
 [tool.poetry.group.dev.dependencies]
