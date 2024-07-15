@@ -4,7 +4,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 
-from rag_compare.utils.format_document import format_documents_with_sources
+from just_rag.utils.format_document import format_documents_with_sources
 
 from .graph_state import GraphState
 from .decision_retry import DecideToRetry

@@ -1,7 +1,7 @@
 import pytest
 
-from rag_compare import SelfRagGraphBuilder
-from rag_compare.llm_factory import LLMFactory
+from just_rag import SelfRagGraphBuilder
+from just_rag.llm_factory import LLMFactory
 from tests.llm import all_llm_factories
 from langchain_community.retrievers import WikipediaRetriever
 from langgraph.graph.graph import CompiledGraph

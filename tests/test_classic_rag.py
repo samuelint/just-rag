@@ -1,5 +1,5 @@
 import pytest
-from rag_compare import ClassicRag
+from just_rag import ClassicRag
 from langchain_community.retrievers import WikipediaRetriever
 from tests.llm import all_llms
 

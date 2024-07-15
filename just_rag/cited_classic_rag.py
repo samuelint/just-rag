@@ -6,8 +6,8 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
-from rag_compare.base_rag import BaseRag, default_system_prompt
-from rag_compare.utils.format_document import format_documents_with_sources
+from just_rag.base_rag import BaseRag, default_system_prompt
+from just_rag.utils.format_document import format_documents_with_sources
 
 
 class Citation(BaseModel):

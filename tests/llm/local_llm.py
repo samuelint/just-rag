@@ -2,7 +2,7 @@ import os
 from llama_cpp import Llama, Optional
 from langchain_llamacpp_chat_model import LlamaChatModel
 
-from rag_compare.llm_factory import LLMFactory
+from just_rag.llm_factory import LLMFactory
 
 model_path = os.path.join(
     os.path.expanduser("~/.cache/lm-studio/models"),

@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph, END
 from langchain_core.retrievers import BaseRetriever
 from langgraph.graph.graph import CompiledGraph
 
-from rag_compare.llm_factory import LLMFactory
+from just_rag.llm_factory import LLMFactory
 
 from .graph_state import GraphState
 from .node_retreiver import RetrieverNode

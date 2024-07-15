@@ -1,6 +1,6 @@
 import pprint
 import pytest
-from rag_compare import CitedClassicRag
+from just_rag import CitedClassicRag
 from langchain_community.retrievers import WikipediaRetriever
 from tests.llm import all_llms
 

@@ -5,7 +5,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-from rag_compare.base_rag import BaseRag, default_system_prompt
+from just_rag.base_rag import BaseRag, default_system_prompt
 from .utils.format_document import format_documents
 
 

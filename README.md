@@ -6,10 +6,11 @@ This library simplifies the process of using Retrieval-Augmented Generation (RAG
 - Have an unified input/output signature across different RAG Strategies
 
 ## Remote inference
+
 ### Classic Rag
 
 ```python
-from rag_compare import ClassicRag
+from just_rag import ClassicRag
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
@@ -25,7 +26,7 @@ print(result["result"])
 ### Classic Rag with Citation
 
 ```python
-from rag_compare import CitedClassicRag
+from just_rag import CitedClassicRag
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
@@ -42,7 +43,7 @@ print(result["result"].citations)
 ### Self Rag (with Citation)
 
 ```python
-from rag_compare import SelfRagGraphBuilder
+from just_rag import SelfRagGraphBuilder
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
@@ -59,10 +60,11 @@ print(result["documents"][0].metadata['summary'])
 ```
 
 ## Local Inference
+
 ### Using LLamaCPP & langchain_llamacpp_chat_model
 
 ```python
-from rag_compare import SelfRagGraphBuilder
+from just_rag import SelfRagGraphBuilder
 from langchain_llamacpp_chat_model import LlamaChatModel
 from llama_cpp import Llama
 from langchain_community.retrievers import WikipediaRetriever
