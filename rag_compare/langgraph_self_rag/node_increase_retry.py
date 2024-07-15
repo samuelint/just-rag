@@ -1,7 +1,4 @@
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-
-from ..llm_factory import LLMFactory
 from .graph_state import GraphState
 
 
@@ -22,7 +19,7 @@ class IncreaseRetryNode:
     def __call__(self, state: GraphState):
 
         print("---INCREASE RETRY---")
-        retry_count = state.get("retry_count", 0)
+        retry_count = state.get("retry_count") or 0
         retry_count = retry_count + 1
 
         return {

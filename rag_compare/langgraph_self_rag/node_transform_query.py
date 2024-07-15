@@ -36,14 +36,9 @@ class TransformQueryNode:
 
         print("---TRANSFORM QUERY---")
         question = state["question"]
-        documents = state["documents"]
-        retry_count = state.get("retry_count", 0)
-        retry_count = retry_count + 1
 
-        # Re-write question
         better_question = self.question_rewriter.invoke({"question": question})
+
         return {
-            "documents": documents,
             "question": better_question,
-            "retry_count": retry_count,
         }

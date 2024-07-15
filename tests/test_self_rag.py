@@ -38,7 +38,10 @@ class TestSelfRag:
 
         print(marmaid_graph)
 
-    def test_no_answer_found(self, self_rag: CompiledGraph):
+    def test_no_possible_answer_exit(self, self_rag: CompiledGraph):
+        """
+        Test that it does not infinitly loop when no possible answer is found
+        """
         result = self_rag.invoke(
             {
                 "question": "What is gn230r9jfq9g34g0f9m?",
@@ -46,8 +49,8 @@ class TestSelfRag:
             }
         )
 
-        assert len(result["fail_reason"]) == ""
         assert len(result["documents"]) == 0
+        assert result["retry_count"] > result["max_retry"]
 
 
 if __name__ == "__main__":

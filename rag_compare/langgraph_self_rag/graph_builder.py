@@ -47,7 +47,6 @@ class SelfRagGraphBuilder:
         )
         workflow.add_edge("transform_query", "retrieve")
         workflow.add_edge("try_generate", "generate")
-        workflow.add_edge("try_transform_query", "transform_query")
         workflow.add_conditional_edges(
             "generate",
             DecisionHasHallucination(llm_factory=self.llm_factory),
@@ -62,7 +61,7 @@ class SelfRagGraphBuilder:
             "try_transform_query",
             DecideToRetry(),
             {
-                "continue": "retrieve",
+                "continue": "transform_query",
                 "max_retry_count_reached": END,
             },
         )
