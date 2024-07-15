@@ -123,13 +123,13 @@ files = [
 
 [[package]]
 name = "anthropic"
-version = "0.31.0"
+version = "0.31.1"
 description = "The official Python library for the anthropic API"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "anthropic-0.31.0-py3-none-any.whl", hash = "sha256:77f7a428e1723b79a571c2427ae885d9257c68f700726dff7ce684c3972d6598"},
-    {file = "anthropic-0.31.0.tar.gz", hash = "sha256:14f8f65231859a65ec9aacbbea070e412c8bd41a5d3f36793dac4292c3c78d3a"},
+    {file = "anthropic-0.31.1-py3-none-any.whl", hash = "sha256:d18809cbdecee2296f418e30beb2d0a8ecc225c065a1494cb02348af48794ff8"},
+    {file = "anthropic-0.31.1.tar.gz", hash = "sha256:d2248dfc15f7fc7823ac0bb9d48e73429e9b1ed8327ac66839d00cdb2f29d3cb"},
 ]
 
 [package.dependencies]
@@ -1483,13 +1483,13 @@ tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
 
 [[package]]
 name = "langchain-llamacpp-chat-model"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "langchain_llamacpp_chat_model-0.2.1-py3-none-any.whl", hash = "sha256:28c576326fb18309ffbb815f2de1ecb4d11c245673dc03bb33c45e0db2c5fd93"},
-    {file = "langchain_llamacpp_chat_model-0.2.1.tar.gz", hash = "sha256:7f97e11e2d4c81772eaa734c67aa314c47e323849aa22ac1d437e925d42b93ec"},
+    {file = "langchain_llamacpp_chat_model-0.2.2-py3-none-any.whl", hash = "sha256:6f74a7ac7d0618ecace5f3323c5e9d13e6fe9503ede387f06eafdd61a3c66017"},
+    {file = "langchain_llamacpp_chat_model-0.2.2.tar.gz", hash = "sha256:b41d8c42283e648203239abd8e0f392f20aba5233d1ea4a0e6cecef8f801688c"},
 ]
 
 [package.dependencies]
@@ -3861,4 +3861,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "<=3.12.4,>=3.10"
-content-hash = "c6521cfefcfc15203b69b8433f305d63f6868e13f22484921a2692b097ab0f33"
+content-hash = "08878d11be6f79e5f6fdbe6e978d62a313c4e6da247089e0fe5b6cdf44e5e27f"
