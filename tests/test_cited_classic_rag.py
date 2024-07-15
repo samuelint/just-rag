@@ -1,6 +1,6 @@
 import pprint
 import pytest
-from rag_compare.cited_classic_rag import CitedClassicRag
+from rag_compare import CitedClassicRag
 from langchain_community.retrievers import WikipediaRetriever
 from tests.llm import all_llms
 
@@ -16,6 +16,6 @@ def test_cited_classic_rag(llm):
 
     assert result["input"] == "How fast are cheetahs?"
     assert len(result["context"]) > 0
-    assert len(result["answer"].answer) > 0
-    assert len(result["answer"].citations) > 0
-    pprint.pprint(result["answer"])
+    assert len(result["result"].result) > 0
+    assert len(result["result"].citations) > 0
+    pprint.pprint(result["result"])

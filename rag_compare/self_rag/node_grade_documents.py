@@ -38,14 +38,14 @@ class GradeDocumentsNode:
 
     def __call__(self, state: GraphState):
         logger.info("---CHECK DOCUMENT RELEVANCE TO QUESTION---")
-        question = state["question"]
+        input = state["input"]
         documents = state["documents"]
 
         # Score each doc
         filtered_docs = []
         for d in documents:
             score = self.retrieval_grader.invoke(
-                {"question": question, "document": d.page_content}
+                {"question": input, "document": d.page_content}
             )
             grade = score.binary_score
             if grade == "yes":
@@ -56,5 +56,5 @@ class GradeDocumentsNode:
                 continue
         return {
             "documents": filtered_docs,
-            "question": question,
+            "input": input,
         }

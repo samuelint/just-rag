@@ -1,5 +1,5 @@
 import pytest
-from rag_compare.classic_rag import ClassicRag
+from rag_compare import ClassicRag
 from langchain_community.retrievers import WikipediaRetriever
 from tests.llm import all_llms
 
@@ -13,8 +13,8 @@ def test_classic_rag(llm):
 
     assert result["input"] == "How fast are cheetahs?"
     assert len(result["context"]) > 0
-    assert len(result["answer"]) > 0
-    print(["answer"])
+    assert len(result["result"]) > 0
+    print(result["result"])
 
 
 if __name__ == "__main__":

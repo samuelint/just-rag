@@ -12,8 +12,8 @@ class RetrieverNode:
     def __call__(self, state: GraphState):
 
         logger.info("---RETRIEVE---")
-        question = state["question"]
+        input = state["input"]
 
-        documents = self.retriever.invoke(question)
+        documents = self.retriever.invoke(input)
 
-        return {"documents": documents, "question": question}
+        return {"documents": documents, "input": input}

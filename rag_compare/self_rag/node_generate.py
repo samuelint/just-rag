@@ -25,14 +25,13 @@ class GenerateNode:
 
     def __call__(self, state: GraphState):
         logger.info("---GENERATE---")
-        question = state["question"]
+        input = state["input"]
         documents = state["documents"]
 
-        # RAG generation
-        generation = self.rag_chain.invoke({"context": documents, "question": question})
+        generation = self.rag_chain.invoke({"context": documents, "question": input})
 
         return {
             "documents": documents,
-            "question": question,
+            "input": input,
             "result": generation,
         }

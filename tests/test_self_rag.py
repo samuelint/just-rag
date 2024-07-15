@@ -1,6 +1,6 @@
 import pytest
 
-from rag_compare.langgraph_self_rag.graph_builder import SelfRagGraphBuilder
+from rag_compare import SelfRagGraphBuilder
 from rag_compare.llm_factory import LLMFactory
 from tests.llm import all_llm_factories
 from langchain_community.retrievers import WikipediaRetriever
@@ -29,7 +29,7 @@ class TestSelfRag:
     def test_simple_grounded_with_facts(self, self_rag: CompiledGraph):
         result = self_rag.invoke(
             {
-                "question": "Who is René Lévesque?",
+                "input": "Who is René Lévesque?",
                 "max_retry": 1,
             }
         )
@@ -48,7 +48,7 @@ class TestSelfRag:
         """
         result = self_rag.invoke(
             {
-                "question": "What is gn230r9jfq9g34g0f9m?",
+                "input": "What is gn230r9jfq9g34g0f9m?",
                 "max_retry": 1,
             }
         )

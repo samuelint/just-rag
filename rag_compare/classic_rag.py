@@ -31,7 +31,7 @@ class ClassicRag(BaseRag):
         retrieve_docs = (lambda x: x["input"]) | self.retriever
 
         return RunnablePassthrough.assign(context=retrieve_docs).assign(
-            answer=rag_chain_from_docs
+            result=rag_chain_from_docs
         )
 
     def __prompt(self) -> ChatPromptTemplate:

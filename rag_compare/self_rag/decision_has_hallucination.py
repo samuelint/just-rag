@@ -68,7 +68,7 @@ class DecisionHasHallucination:
             return should_retry
 
         logger.info("---CHECK HALLUCINATIONS---")
-        question = state["question"]
+        question = state["input"]
         documents = state["documents"]
         result = state["result"]
 

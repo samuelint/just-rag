@@ -8,8 +8,8 @@ class GraphState(TypedDict):
     Represents the state of our graph.
     """
 
-    question: str  # User question
-    result: str  # LLM generation (answer)
+    input: str
+    result: str
     documents: List[Document]
 
     retry_count: int = 0

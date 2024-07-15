@@ -27,10 +27,10 @@ class TransformQueryNode:
 
     def __call__(self, state: GraphState):
         logger.info("---TRANSFORM QUERY---")
-        question = state["question"]
+        input = state["input"]
 
-        better_question = self.question_rewriter.invoke({"question": question})
+        better_question = self.question_rewriter.invoke({"question": input})
 
         return {
-            "question": better_question,
+            "input": better_question,
         }
