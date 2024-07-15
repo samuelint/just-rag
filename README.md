@@ -4,6 +4,9 @@ This library simplifies the process of using Retrieval-Augmented Generation (RAG
 
 - Based on LangChain / LangGraph
 - Have an unified input/output signature across different RAG Strategies
+- Support offline / local inference (through [LLamaCPP](https://github.com/abetlen/llama-cpp-python) & [langchain_llamacpp_chat_model](https://github.com/samuelint/langchain-llamacpp-chat-model)
+
+If you find this project useful, please give it a star ⭐!
 
 ## Remote inference
 
