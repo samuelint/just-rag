@@ -573,6 +573,17 @@ marshmallow = ">=3.18.0,<4.0.0"
 typing-inspect = ">=0.4.0,<1"
 
 [[package]]
+name = "decoy"
+version = "2.1.1"
+description = "Opinionated mocking library for Python"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "decoy-2.1.1-py3-none-any.whl", hash = "sha256:7ddcc08b8ce991f7705cee76fae9061dcb17352e0a1ca2d9a0d4a0306ebd51cd"},
+    {file = "decoy-2.1.1.tar.gz", hash = "sha256:575bdbe81afb4c152cd99a34568a9aa4369461f79d6172c678279c5d5585befe"},
+]
+
+[[package]]
 name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
@@ -3861,4 +3872,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "<=3.12.4,>=3.10"
-content-hash = "08878d11be6f79e5f6fdbe6e978d62a313c4e6da247089e0fe5b6cdf44e5e27f"
+content-hash = "c7fbeb04f524b8ec4c7b9d039261fda65f8e9ae024d3162ac2234820785ed5bd"
