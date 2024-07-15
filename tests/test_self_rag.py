@@ -18,7 +18,7 @@ class TestSelfRag:
     def retriever(self):
         # Note:
         # The number of retreived documents should be inferior to the local llm context size.
-        # 6 * 1000 < n_ctx
+        # top_k_results * doc_content_chars_max < n_ctx
         return WikipediaRetriever(
             top_k_results=6,
             doc_content_chars_max=1000,
@@ -38,6 +38,10 @@ class TestSelfRag:
 
         assert len(result["result"]) > 0
         assert len(result["documents"]) > 0
+
+        print(result["documents"][0].metadata["title"])
+        print(result["documents"][0].metadata["source"])
+        print(result["documents"][0].metadata["summary"])
 
     def test_generate_graph(self, self_rag: CompiledGraph):
         marmaid_graph = self_rag.get_graph().draw_mermaid()
