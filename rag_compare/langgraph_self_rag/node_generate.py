@@ -1,0 +1,44 @@
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
+
+from ..llm_factory import LLMFactory
+from .graph_state import GraphState
+
+
+prompt = PromptTemplate(
+    template="""You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.
+If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+Question: {question}
+Context: {context}
+Answer:""",
+    input_variables=["question", "document"],
+)
+
+
+class GenerateNode:
+    def __init__(self, llm_factory: LLMFactory) -> None:
+        llm = llm_factory(temperature=0)
+        self.rag_chain = prompt | llm | StrOutputParser()
+
+    def __call__(self, state: GraphState):
+        """
+        Generate answer using RAG on retrieved documents
+
+        Args:
+            state (dict): The current graph state
+
+        Returns:
+            state (dict): New key added to state, generation, that contains LLM generation
+        """
+        print("---GENERATE---")
+        question = state["question"]
+        documents = state["documents"]
+
+        # RAG generation
+        generation = self.rag_chain.invoke({"context": documents, "question": question})
+
+        return {
+            "documents": documents,
+            "question": question,
+            "result": generation,
+        }
