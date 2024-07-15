@@ -1,5 +1,8 @@
+import logging
 from langchain_core.retrievers import BaseRetriever
 from .graph_state import GraphState
+
+logger = logging.getLogger(__name__)
 
 
 class RetrieverNode:
@@ -7,19 +10,10 @@ class RetrieverNode:
         self.retriever = retriever
 
     def __call__(self, state: GraphState):
-        """
-        Retrieve documents from vectorstore
 
-        Args:
-            state (dict): The current graph state
-
-        Returns:
-            state (dict): New key added to state, documents, that contains retrieved documents
-        """
-        print("---RETRIEVE---")
+        logger.info("---RETRIEVE---")
         question = state["question"]
 
-        # Retrieval
         documents = self.retriever.invoke(question)
 
         return {"documents": documents, "question": question}

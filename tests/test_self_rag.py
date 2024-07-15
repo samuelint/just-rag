@@ -16,7 +16,11 @@ class TestSelfRag:
 
     @pytest.fixture
     def retriever(self):
-        return WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
+        return WikipediaRetriever(
+            top_k_results=6,
+            doc_content_chars_max=2000,
+            load_all_available_meta=True,
+        )
 
     @pytest.fixture
     def self_rag(self, llm_factory, retriever) -> CompiledGraph:

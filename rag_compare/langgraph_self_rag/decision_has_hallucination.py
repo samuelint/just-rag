@@ -1,9 +1,15 @@
+import logging
+from typing import List
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.documents import Document
 
+from .graph_state import GraphState
 from .decision_retry import DecideToRetry
 
 from ..llm_factory import LLMFactory
+
+logger = logging.getLogger(__name__)
 
 
 class GradeAnswer(BaseModel):
@@ -56,46 +62,40 @@ class DecisionHasHallucination:
         grade_answer_structured_llm_grader = llm.with_structured_output(GradeAnswer)
         self.answer_grader = grade_answer_prompt | grade_answer_structured_llm_grader
 
-    def __call__(self, state):
-        """
-        Determines whether the generation is grounded in the document.
-
-        Args:
-            state (dict): The current graph state
-
-        Returns:
-            str: Decision for next node to call
-        """
-
+    def __call__(self, state: GraphState):
         should_retry = DecideToRetry()(state)
         if should_retry != "continue":
             return should_retry
 
-        print("---CHECK HALLUCINATIONS---")
+        logger.info("---CHECK HALLUCINATIONS---")
         question = state["question"]
         documents = state["documents"]
-        generation = state["result"]
+        result = state["result"]
 
-        score = self.hallucination_grader.invoke(
-            {"documents": documents, "generation": generation}
+        are_documents_based_on_facts = self.are_documents_based_on_facts(
+            result=result, documents=documents
         )
-        are_documents_based_on_facts = score.binary_score
 
-        # Check hallucination
-        if are_documents_based_on_facts == "yes":
-            print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
-            # Check question-answering
-            print("---GRADE GENERATION vs QUESTION---")
-            score = self.answer_grader.invoke(
-                {"question": question, "generation": generation}
-            )
-            does_answer_resolve_question = score.binary_score
-            if does_answer_resolve_question == "yes":
-                print("---DECISION: GENERATION ADDRESSES QUESTION---")
-                return "useful"
-            else:
-                print("---DECISION: GENERATION DOES NOT ADDRESS QUESTION---")
-                return "not_useful"
-        else:
-            print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
+        if not are_documents_based_on_facts:
             return "not_factual"
+
+        does_answer_resolve_question = self.does_answer_resolve_question(
+            question=question,
+            result=result,
+        )
+        if does_answer_resolve_question:
+            return "useful"
+        else:
+            return "not_useful"
+
+    def are_documents_based_on_facts(
+        self, result: str, documents: List[Document]
+    ) -> bool:
+        score = self.hallucination_grader.invoke(
+            {"documents": documents, "generation": result}
+        )
+        return score.binary_score == "yes"
+
+    def does_answer_resolve_question(self, question: str, result: str) -> bool:
+        score = self.answer_grader.invoke({"question": question, "generation": result})
+        return score.binary_score == "yes"
