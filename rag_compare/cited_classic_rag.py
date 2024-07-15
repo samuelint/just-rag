@@ -3,11 +3,11 @@ from langchain_core.runnables import Runnable
 from langchain_core.language_models import BaseChatModel
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.runnables import RunnablePassthrough
-from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 from rag_compare.base_rag import BaseRag, default_system_prompt
+from rag_compare.utils.format_document import format_documents_with_sources
 
 
 class Citation(BaseModel):
@@ -44,7 +44,7 @@ class CitedClassicRag(BaseRag):
     def build(self) -> Runnable:
         rag_chain_from_docs = (
             RunnablePassthrough.assign(
-                context=(lambda x: self.__format_docs(x["context"]))
+                context=(lambda x: format_documents_with_sources(x["context"]))
             )
             | self.__prompt()
             | self.llm
@@ -63,10 +63,3 @@ class CitedClassicRag(BaseRag):
                 ("human", "{input}"),
             ]
         )
-
-    def __format_docs(self, docs: List[Document]) -> str:
-        formatted = [
-            f"Source ID: {i}\nArticle Title: {doc.metadata['title']}\nArticle Snippet: {doc.page_content}"
-            for i, doc in enumerate(docs)
-        ]
-        return "\n\n" + "\n\n".join(formatted)

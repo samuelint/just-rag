@@ -4,6 +4,8 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 
+from rag_compare.utils.format_document import format_documents_with_sources
+
 from .graph_state import GraphState
 from .decision_retry import DecideToRetry
 
@@ -20,12 +22,14 @@ class GradeAnswer(BaseModel):
     )
 
 
-grade_answer_system = """You are a grader assessing whether an answer addresses / resolves a question
-     Give a binary score 'yes' or 'no'. Yes' means that the answer resolves the question."""
+grade_answer_system = """\
+You are a grader assessing whether an answer addresses / resolves a question. \
+Give a binary score 'yes' or 'no'. Yes' means that the answer resolves the question.\
+"""
 grade_answer_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", grade_answer_system),
-        ("human", "User question: \n\n {question} \n\n LLM generation: {generation}"),
+        ("human", "User question: \n\n {question} \n\n LLM answer: {generation}"),
     ]
 )
 
@@ -38,12 +42,14 @@ class GradeHallucinations(BaseModel):
     )
 
 
-grade_hallucination_system = """You are a grader assessing whether an LLM generation is grounded in / supported by a set of retrieved facts.
-     Give a binary score 'yes' or 'no'. 'Yes' means that the answer is grounded in / supported by the set of facts."""
+grade_hallucination_system = """\
+You are a grader assessing whether an LLM answer is grounded in / supported by a set of retrieved facts. \
+Give a binary score 'yes' or 'no'. 'Yes' means that the answer is grounded in / supported by the set of facts.\
+"""
 grade_hallucination_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", grade_hallucination_system),
-        ("human", "Set of facts: \n\n {documents} \n\n LLM generation: {generation}"),
+        ("human", "Set of facts: \n\n {documents} \n\n LLM answer: {generation}"),
     ]
 )
 
@@ -92,7 +98,10 @@ class DecisionHasHallucination:
         self, result: str, documents: List[Document]
     ) -> bool:
         score = self.hallucination_grader.invoke(
-            {"documents": documents, "generation": result}
+            {
+                "documents": format_documents_with_sources(documents),
+                "generation": result,
+            }
         )
         return score.binary_score == "yes"
 

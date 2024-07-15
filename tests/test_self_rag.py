@@ -16,10 +16,12 @@ class TestSelfRag:
 
     @pytest.fixture
     def retriever(self):
+        # Note:
+        # The number of retreived documents should be inferior to the local llm context size.
+        # 6 * 1000 < n_ctx
         return WikipediaRetriever(
             top_k_results=6,
-            doc_content_chars_max=2000,
-            load_all_available_meta=True,
+            doc_content_chars_max=1000,
         )
 
     @pytest.fixture

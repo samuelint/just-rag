@@ -12,23 +12,17 @@ model_path = os.path.join(
 llama = Llama(
     verbose=True,
     model_path=model_path,
-    n_ctx=16384,
-    n_batch=224,  # Should be between 1 and n_ctx, consider the amount of RAM.
-    offload_kqv=True,  # Equivalent of f16_kv=True
+    n_ctx=8192,  # LLama3 has a maximum context size of 8192
+    n_batch=512,  # Should be between 1 and n_ctx, consider the amount of RAM.
     n_gpu_layers=-1,  # -1 is all on GPU
+    n_threads=4,
+    use_mlock=True,
     chat_format="chatml-function-calling",  # https://llama-cpp-python.readthedocs.io/en/latest/#function-calling
 )
 local_llm = LlamaChatModel(llama=llama, temperature=0.0)
 
 
 class LlamaLlmFactory(LLMFactory):
-    __instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls.__instance:
-            cls.__instance = super().__new__(cls)
-        return cls.__instance
-
     @property
     def _llm_type(self) -> str:
         return "llama"
@@ -37,9 +31,7 @@ class LlamaLlmFactory(LLMFactory):
         self,
         temperature: Optional[float] = 0.0,
     ):
-        if not hasattr(self, "llm"):
-            self.llm = LlamaChatModel(
-                llama=llama,
-                temperature=temperature,
-            )
-        return self.llm
+        return LlamaChatModel(
+            llama=llama,
+            temperature=temperature,
+        )
