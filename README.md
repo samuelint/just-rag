@@ -5,6 +5,7 @@ This library simplifies the process of using Retrieval-Augmented Generation (RAG
 - Based on LangChain / LangGraph
 - Have an unified input/output signature across different RAG Strategies
 
+## Remote inference
 ### Classic Rag
 
 ```python
@@ -57,7 +58,8 @@ print(result["documents"][0].metadata['source'])
 print(result["documents"][0].metadata['summary'])
 ```
 
-### Using local inference (LLamaCPP)
+## Local Inference
+### Using LLamaCPP & langchain_llamacpp_chat_model
 
 ```python
 from rag_compare import SelfRagGraphBuilder
