@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from rag_compare.base_rag import BaseRag, default_system_prompt
 
 
-class SimpleRag(BaseRag):
+class ClassicRag(BaseRag):
     llm: BaseChatModel
     retriever: BaseRetriever
 

@@ -33,7 +33,7 @@ class CitedAnswer(BaseModel):
     )
 
 
-class SimpleCitationRag(BaseRag):
+class CitedClassicRag(BaseRag):
     llm: BaseChatModel
     retriever: BaseRetriever
 
