@@ -40,7 +40,7 @@ print(result["result"].result)
 print(result["result"].citations)
 ```
 
-### Self Rag (with Citation)
+### Agentic RAG - Self Rag (with Citation)
 
 ```python
 from just_rag import SelfRagGraphBuilder
