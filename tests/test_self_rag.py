@@ -1,6 +1,6 @@
 import pytest
 
-from rag_compare.langgraph_self_rag.graph_builder import SelfRagGraphBuilder
+from rag_compare import SelfRagGraphBuilder
 from rag_compare.llm_factory import LLMFactory
 from tests.llm import all_llm_factories
 from langchain_community.retrievers import WikipediaRetriever
@@ -16,7 +16,13 @@ class TestSelfRag:
 
     @pytest.fixture
     def retriever(self):
-        return WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
+        # Note:
+        # The number of retreived documents should be inferior to the local llm context size.
+        # top_k_results * doc_content_chars_max < n_ctx
+        return WikipediaRetriever(
+            top_k_results=6,
+            doc_content_chars_max=1000,
+        )
 
     @pytest.fixture
     def self_rag(self, llm_factory, retriever) -> CompiledGraph:
@@ -25,13 +31,17 @@ class TestSelfRag:
     def test_simple_grounded_with_facts(self, self_rag: CompiledGraph):
         result = self_rag.invoke(
             {
-                "question": "Who is René Lévesque?",
+                "input": "Who is René Lévesque?",
                 "max_retry": 1,
             }
         )
 
         assert len(result["result"]) > 0
         assert len(result["documents"]) > 0
+
+        print(result["documents"][0].metadata["title"])
+        print(result["documents"][0].metadata["source"])
+        print(result["documents"][0].metadata["summary"])
 
     def test_generate_graph(self, self_rag: CompiledGraph):
         marmaid_graph = self_rag.get_graph().draw_mermaid()
@@ -44,7 +54,7 @@ class TestSelfRag:
         """
         result = self_rag.invoke(
             {
-                "question": "What is gn230r9jfq9g34g0f9m?",
+                "input": "What is gn230r9jfq9g34g0f9m?",
                 "max_retry": 1,
             }
         )

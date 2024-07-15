@@ -1,9 +1,12 @@
+import logging
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 
 from ..llm_factory import LLMFactory
 from .graph_state import GraphState
 
+
+logger = logging.getLogger(__name__)
 
 prompt = PromptTemplate(
     template="""You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.
@@ -21,24 +24,14 @@ class GenerateNode:
         self.rag_chain = prompt | llm | StrOutputParser()
 
     def __call__(self, state: GraphState):
-        """
-        Generate answer using RAG on retrieved documents
-
-        Args:
-            state (dict): The current graph state
-
-        Returns:
-            state (dict): New key added to state, generation, that contains LLM generation
-        """
-        print("---GENERATE---")
-        question = state["question"]
+        logger.info("---GENERATE---")
+        input = state["input"]
         documents = state["documents"]
 
-        # RAG generation
-        generation = self.rag_chain.invoke({"context": documents, "question": question})
+        generation = self.rag_chain.invoke({"context": documents, "question": input})
 
         return {
             "documents": documents,
-            "question": question,
+            "input": input,
             "result": generation,
         }

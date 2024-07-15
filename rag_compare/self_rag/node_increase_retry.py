@@ -17,8 +17,6 @@ re_write_prompt = ChatPromptTemplate.from_messages(
 
 class IncreaseRetryNode:
     def __call__(self, state: GraphState):
-
-        print("---INCREASE RETRY---")
         retry_count = state.get("retry_count") or 0
         retry_count = retry_count + 1
 

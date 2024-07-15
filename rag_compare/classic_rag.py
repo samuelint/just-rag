@@ -1,16 +1,15 @@
-from typing import List
 from langchain_core.runnables import Runnable
 from langchain_core.language_models import BaseChatModel
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.runnables import RunnablePassthrough
-from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from rag_compare.base_rag import BaseRag, default_system_prompt
+from .utils.format_document import format_documents
 
 
-class SimpleRag(BaseRag):
+class ClassicRag(BaseRag):
     llm: BaseChatModel
     retriever: BaseRetriever
 
@@ -21,7 +20,7 @@ class SimpleRag(BaseRag):
     def build(self) -> Runnable:
         rag_chain_from_docs = (
             RunnablePassthrough.assign(
-                context=(lambda x: self.__format_docs(x["context"]))
+                context=(lambda x: format_documents(x["context"]))
             )
             | self.__prompt()
             | self.llm
@@ -31,7 +30,7 @@ class SimpleRag(BaseRag):
         retrieve_docs = (lambda x: x["input"]) | self.retriever
 
         return RunnablePassthrough.assign(context=retrieve_docs).assign(
-            answer=rag_chain_from_docs
+            result=rag_chain_from_docs
         )
 
     def __prompt(self) -> ChatPromptTemplate:
@@ -41,6 +40,3 @@ class SimpleRag(BaseRag):
                 ("human", "{input}"),
             ]
         )
-
-    def __format_docs(self, docs: List[Document]):
-        return "\n\n".join(doc.page_content for doc in docs)
