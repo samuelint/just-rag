@@ -1,0 +1,69 @@
+name: Publish to PyPI
+
+env:
+  PYPI_PACKAGE_NAME: just_rag
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          TAG_NAME=${{ github.event.release.tag_name }}
+          if [[ $TAG_NAME =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            VERSION=${BASH_REMATCH[1]}
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+          else
+            echo "The tag $TAG_NAME is not in the expected format 'v<MAJOR>.<MINOR>.<PATCH>'"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --all-extras
+
+      - name: Update version in pyproject.toml
+        run: |
+          poetry version ${{ env.VERSION }}
+
+      # Models should be stored using LFS or downloaded in the pipeline for tests to be run
+      # - name: Run tests
+      #   run: |
+      #     poetry run pytest
+
+      - name: Build
+        run: |
+          poetry build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./dist
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Bump version to ${{ env.VERSION }}
+          branch: main
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: ./dist

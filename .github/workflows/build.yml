@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --all-extras
+
+      # # Models should be stored using LFS or downloaded in the pipeline for tests to be run
+      # # GPU runners are not yet supported. But will be soon!! (https://github.blog/changelog/2023-10-31-run-your-ml-workloads-on-github-actions-with-gpu-runners/)
+      # - name: Run tests
+      #   run: |
+      #     poetry run pytest
+
+      - name: Build
+        run: |
+          pip install poetry
+          poetry build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./dist
