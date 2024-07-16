@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from langchain_core.documents import Document
 
 from .loader import FileOrUrlLoader
@@ -16,20 +16,29 @@ _DEFAULT_LOADERS = [
 ]
 
 
-class UniversalLoader:
+class UniversalDocumentLoader:
     def __init__(
-        self, loaders: Optional[list[FileOrUrlLoader]] = _DEFAULT_LOADERS
+        self,
+        paths: list[str] = [],
+        loaders: Optional[list[FileOrUrlLoader]] = _DEFAULT_LOADERS,
     ) -> None:
+        self.paths_or_urls = paths
         self.loaders = loaders
 
-    def load(self, paths_or_urls: list[str]) -> list[Document]:
-        documents = []
+    def add(self, path_or_url: Union[str, list[str]]) -> None:
+        if isinstance(path_or_url, list):
+            self.paths_or_urls.extend(path_or_url)
+        else:
+            self.paths_or_urls.append(path_or_url)
 
-        for path_or_url in paths_or_urls:
+    def load(self) -> list[Document]:
+        loaded_documents = []
+
+        for path_or_url in self.paths_or_urls:
             for loader in self.loaders:
                 if loader.can_load(path_or_url=path_or_url) is True:
                     result = loader.load(path_or_url=path_or_url)
-                    documents.extend(result)
+                    loaded_documents.extend(result)
                     break
 
-        return documents
+        return loaded_documents

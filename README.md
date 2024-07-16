@@ -8,6 +8,32 @@ This library simplifies the process of using Retrieval-Augmented Generation (RAG
 
 If you find this project useful, please give it a star ⭐!
 
+## Full Stack Rag
+
+Persist & cync documents when file changes.
+
+```python
+builder = JustChromaVectorStoreBuilder(
+    collection_name="droits_canadiens",
+    file_or_urls=["./tests/assets/Charte canadienne des droits et libertés.html"], # Any file or url
+    record_manager_db_url="sqlite:///_record_manager_cache.sql", # Any SQL Alchemy compatible URL
+    chroma_persist_directory="./tests_chroma_db", # Any ChromaDB compatible URL
+)
+
+retriever = builder.get_retriever()
+chain = CitedClassicRag(llm=openai_llm, retriever=retriever).build()
+
+result = chain.invoke(
+    {
+        "input": "En temps que citoyen, est-ce que j'ai le droit d'entrer et sortir du canada quand je veux? Repondre oui ou non.",
+    }
+)
+
+assert "non" in result["result"].result.lower()
+```
+
+Full example: [tests/test_functional/test_functional_full_stack_rag.py](tests/test_functional/test_functional_full_stack_rag.py)
+
 ## Remote inference
 
 ### Classic Rag
@@ -18,7 +44,7 @@ from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=temperature)
-retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
+retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=1000)
 
 chain = ClassicRag(llm=llm, retriever=retriever).build()
 result = chain.invoke({"input": "How fast are cheetahs?"})
@@ -26,41 +52,86 @@ result = chain.invoke({"input": "How fast are cheetahs?"})
 print(result["result"])
 ```
 
+Full example: [tests/test_functional/test_functional_classic_rag.py](tests/test_functional/test_functional_classic_rag.py)
+
 ### Classic Rag with Citation
 
 ```python
 from just_rag import CitedClassicRag
+from just_rag.citation import BaseCitation, BaseCitedAnswer
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=temperature)
-retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
+retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=1000)
 
-chain = CitedClassicRag(llm=llm, retriever=retriever).build()
+class Citation(BaseCitation):
+    page_content: str = Field(
+        ...,
+        description="Page content from the specified source that justifies the answer.",
+    )
+    title: str = Field(
+        ...,
+        description="The TITLE quote from the specified source that justifies the answer.",
+    )
+
+
+class CitedAnswer(BaseCitedAnswer[Citation]):
+    citations: List[Citation] = Field(
+        ..., description="Citations from the given sources that justify the answer."
+    )
+
+
+chain = CitedClassicRag(llm=llm, retriever=retriever, schema=CitedAnswer).build()
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
 print(result["result"].result)
 print(result["result"].citations)
 ```
 
+Full example: [tests/test_functional/test_functional_cited_classic_rag.py](tests/test_functional/test_functional_cited_classic_rag.py)
+
 ### Agentic RAG - Self Rag (with Citation)
 
 ```python
 from just_rag import SelfRagGraphBuilder
+from just_rag.citation import BaseCitation, BaseCitedAnswer
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=temperature)
-retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
+retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=1000)
 
-chain = SelfRagGraphBuilder(llm=llm, retriever=retriever).build()
+class Citation(BaseCitation):
+    page_content: str = Field(
+        ...,
+        description="Page content from the specified source that justifies the answer.",
+    )
+    title: str = Field(
+        ...,
+        description="The TITLE quote from the specified source that justifies the answer.",
+    )
+
+
+class CitedAnswer(BaseCitedAnswer[Citation]):
+    citations: List[Citation] = Field(
+        ..., description="Citations from the given sources that justify the answer."
+    )
+
+
+chain = SelfRagGraphBuilder(llm=llm, retriever=retriever, schema=CitedAnswer).build()
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
 print(result["result"])
 print(result["documents"][0].metadata['title'])
 print(result["documents"][0].metadata['source'])
 print(result["documents"][0].metadata['summary'])
+print(result["result"].citations[0].source_id)
+print(result["result"].citations[0].title)
+print(result["result"].citations[0].page_content)
 ```
+
+Full example: [tests/test_functional/test_functional_self_rag.py](tests/test_functional/test_functional_self_rag.py)
 
 ## Local Inference
 

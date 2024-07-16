@@ -1,50 +1,40 @@
-from typing import List
+from typing import List, Type
 from langchain_core.runnables import Runnable
 from langchain_core.language_models import BaseChatModel
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
 
 from just_rag.base_rag import BaseRag, default_system_prompt
+from .citation import BaseCitedAnswer, DefaultCitedAnswer
 from just_rag.utils.format_document import format_documents_with_sources
-
-
-class Citation(BaseModel):
-    source_id: int = Field(
-        ...,
-        description="The integer ID of a SPECIFIC source which justifies the answer.",
-    )
-    quote: str = Field(
-        ...,
-        description="The VERBATIM quote from the specified source that justifies the answer.",
-    )
-
-
-class CitedAnswer(BaseModel):
-    """Answer the user question based only on the given sources, and cite the sources used."""
-
-    result: str = Field(
-        ...,
-        description="The answer to the user question, which is based only on the given sources.",
-    )
-    citations: List[Citation] = Field(
-        ..., description="Citations from the given sources that justify the answer."
-    )
 
 
 class CitedClassicRag(BaseRag):
     llm: BaseChatModel
     retriever: BaseRetriever
 
-    def __init__(self, llm: BaseChatModel, retriever: BaseRetriever):
-        self.llm = llm.with_structured_output(CitedAnswer)
+    def __init__(
+        self,
+        llm: BaseChatModel,
+        retriever: BaseRetriever,
+        schema: Type[BaseCitedAnswer] = DefaultCitedAnswer,
+        meta_keys: List[str] = [],
+    ):
+        self.llm = llm.with_structured_output(schema)
         self.retriever = retriever
+        self.meta_keys = self.__get_meta_keys_from_schema(
+            meta_keys=meta_keys, schema=schema
+        )
 
     def build(self) -> Runnable:
         rag_chain_from_docs = (
             RunnablePassthrough.assign(
-                context=(lambda x: format_documents_with_sources(x["context"]))
+                context=(
+                    lambda x: format_documents_with_sources(
+                        x["context"], meta_keys=self.meta_keys
+                    )
+                )
             )
             | self.__prompt()
             | self.llm
@@ -63,3 +53,11 @@ class CitedClassicRag(BaseRag):
                 ("human", "{input}"),
             ]
         )
+
+    def __get_meta_keys_from_schema(
+        self, meta_keys: List[str], schema: Type[BaseCitedAnswer]
+    ) -> List[str]:
+        citation_fields = schema.__fields__["citations"].type_.__fields__
+        citation_field_names = list(citation_fields.keys())
+
+        return list(set(meta_keys + citation_field_names))

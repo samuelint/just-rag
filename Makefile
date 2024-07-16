@@ -1,5 +1,7 @@
+export PYTHONPATH=$(shell pwd)
+
 .PHONY: install
-test:
+install:
 	poetry install
 
 .PHONY: test
