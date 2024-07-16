@@ -11,3 +11,6 @@ __pycache__/
 *.pyi
 *.pyw
 *.pytest_cache
+
+*.sql
+tests_chroma_db
