@@ -2,9 +2,10 @@
 
 This library simplifies the process of using Retrieval-Augmented Generation (RAG). Focus on the result you want to achieve and let the library handle the rest.
 
+- Support Citation out of the box!
+- Support offline / local inference through [LLamaCPP](https://github.com/abetlen/llama-cpp-python) & [langchain_llamacpp_chat_model](https://github.com/samuelint/langchain-llamacpp-chat-model)
 - Based on LangChain / LangGraph
 - Have an unified input/output signature across different RAG Strategies
-- Support offline / local inference through [LLamaCPP](https://github.com/abetlen/llama-cpp-python) & [langchain_llamacpp_chat_model](https://github.com/samuelint/langchain-llamacpp-chat-model)
 
 If you find this project useful, please give it a star ⭐!
 
@@ -55,6 +56,9 @@ print(result["result"])
 Full example: [tests/test_functional/test_functional_classic_rag.py](tests/test_functional/test_functional_classic_rag.py)
 
 ### Classic Rag with Citation
+
+Pass a custom `Citation` (inheriting from `BaseCitation`) class to automatically gather citation data from your RAG.
+Field on the `Citation` class matching a retreived `Document` metadata are automatically matched.
 
 ```python
 from just_rag import CitedClassicRag
