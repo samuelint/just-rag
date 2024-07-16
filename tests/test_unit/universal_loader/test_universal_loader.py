@@ -2,7 +2,7 @@ import pytest
 from decoy import Decoy, matchers
 from langchain_core.documents import Document
 from just_rag.universal_loader.loader import FileOrUrlLoader
-from just_rag.universal_loader import UniversalLoader
+from just_rag.universal_loader import UniversalDocumentLoader
 
 
 @pytest.fixture
@@ -31,11 +31,6 @@ def document_2(decoy: Decoy):
     return decoy.mock(cls=Document)
 
 
-@pytest.fixture
-def instance(loader_1, loader_2):
-    return UniversalLoader(loaders=[loader_1, loader_2])
-
-
 class TestLoad:
 
     def test_files_are_loaded_in_loaders_order(
@@ -45,7 +40,6 @@ class TestLoad:
         loader_2: FileOrUrlLoader,
         document_1: Document,
         document_2: Document,
-        instance: UniversalLoader,
     ):
         decoy.when(loader_1.can_load(path_or_url="a")).then_return(True)
         decoy.when(loader_1.can_load(path_or_url="b")).then_return(False)
@@ -54,7 +48,11 @@ class TestLoad:
         decoy.when(loader_2.can_load(path_or_url="b")).then_return(True)
         decoy.when(loader_2.load(path_or_url="b")).then_return([document_2])
 
-        result = instance.load(["a", "b"])
+        instance = UniversalDocumentLoader(
+            paths=["a", "b"], loaders=[loader_1, loader_2]
+        )
+
+        result = instance.load()
 
         assert result == [document_1, document_2]
 
@@ -63,12 +61,12 @@ class TestLoad:
         decoy: Decoy,
         loader_1: FileOrUrlLoader,
         loader_2: FileOrUrlLoader,
-        instance: UniversalLoader,
     ):
         decoy.when(loader_1.can_load(path_or_url="a")).then_return(True)
         decoy.when(loader_2.can_load(path_or_url="a")).then_return(True)
+        instance = UniversalDocumentLoader(paths=["a"], loaders=[loader_1, loader_2])
 
-        instance.load(["a"])
+        instance.load()
 
         decoy.verify(
             loader_2.load(),

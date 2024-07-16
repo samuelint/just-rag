@@ -20,6 +20,7 @@ pydantic-settings = { version = "^2.3.4", optional = false }
 pypdf = { version = "^4.3.0", optional = false }
 unstructured = { version = "^0.14.10", optional = false }
 markdown = { version = "^3.6", optional = false }
+langchain-huggingface = "^0.0.3"
 
 
 [tool.poetry.group.dev.dependencies]

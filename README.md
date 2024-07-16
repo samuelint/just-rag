@@ -30,13 +30,31 @@ print(result["result"])
 
 ```python
 from just_rag import CitedClassicRag
+from just_rag.citation import BaseCitation, BaseCitedAnswer
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=temperature)
 retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
 
-chain = CitedClassicRag(llm=llm, retriever=retriever).build()
+class Citation(BaseCitation):
+    page_content: str = Field(
+        ...,
+        description="Page content from the specified source that justifies the answer.",
+    )
+    title: str = Field(
+        ...,
+        description="The TITLE quote from the specified source that justifies the answer.",
+    )
+
+
+class CitedAnswer(BaseCitedAnswer[Citation]):
+    citations: List[Citation] = Field(
+        ..., description="Citations from the given sources that justify the answer."
+    )
+
+
+chain = CitedClassicRag(llm=llm, retriever=retriever, schema=CitedAnswer).build()
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
 print(result["result"].result)
@@ -47,19 +65,40 @@ print(result["result"].citations)
 
 ```python
 from just_rag import SelfRagGraphBuilder
+from just_rag.citation import BaseCitation, BaseCitedAnswer
 from langchain_openai import ChatOpenAI
 from langchain_community.retrievers import WikipediaRetriever
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=temperature)
 retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
 
-chain = SelfRagGraphBuilder(llm=llm, retriever=retriever).build()
+class Citation(BaseCitation):
+    page_content: str = Field(
+        ...,
+        description="Page content from the specified source that justifies the answer.",
+    )
+    title: str = Field(
+        ...,
+        description="The TITLE quote from the specified source that justifies the answer.",
+    )
+
+
+class CitedAnswer(BaseCitedAnswer[Citation]):
+    citations: List[Citation] = Field(
+        ..., description="Citations from the given sources that justify the answer."
+    )
+
+
+chain = SelfRagGraphBuilder(llm=llm, retriever=retriever, schema=CitedAnswer).build()
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
 print(result["result"])
 print(result["documents"][0].metadata['title'])
 print(result["documents"][0].metadata['source'])
 print(result["documents"][0].metadata['summary'])
+print(result["result"].citations[0].source_id)
+print(result["result"].citations[0].title)
+print(result["result"].citations[0].page_content)
 ```
 
 ## Local Inference
