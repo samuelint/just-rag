@@ -5,9 +5,15 @@ from .loader import FileOrUrlLoader
 from .markdown_loader import MarkdownLoader
 from .pdf_loader import PDFLoader
 from .website_loader import WebsiteLoader
+from .unstructured_file_loader import UnstructuredFileLoader
 
 
-_DEFAULT_LOADERS = [PDFLoader(), MarkdownLoader(), WebsiteLoader()]
+_DEFAULT_LOADERS = [
+    PDFLoader(),
+    MarkdownLoader(),
+    WebsiteLoader(),
+    UnstructuredFileLoader(),
+]
 
 
 class UniversalLoader:
