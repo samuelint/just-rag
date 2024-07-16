@@ -29,6 +29,9 @@ class BaseVectorStoreBuilder:
         cleanup: Literal["incremental", "full", None] = None,
         source_id_key: Optional[str] = "source",
     ) -> IndexingResult:
+        """
+        Docs about cleanup strategy: https://python.langchain.com/v0.2/docs/how_to/indexing/#none-deletion-mode
+        """
         documents = self._load_documents()
         vector_store = self.get_vector_store()
         record_manager = self._get_record_manager()
