@@ -13,4 +13,5 @@ __pycache__/
 *.pytest_cache
 
 *.sql
+*.sqlite3
 tests_chroma_db

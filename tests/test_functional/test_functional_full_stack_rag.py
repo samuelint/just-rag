@@ -18,7 +18,7 @@ test_record_manager_db_path = "tests_record_manager_cache.sql"
 test_record_manager_db_url = f"sqlite:///{test_record_manager_db_path}"
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def delete_files_before_test():
     if os.path.exists(test_chromadb_path):
         shutil.rmtree(test_chromadb_path)
@@ -71,8 +71,8 @@ class TestVectorStoreSync:
         builder = JustChromaVectorStoreBuilder(
             collection_name="vector_store_not_synced",
             file_or_urls=documents_paths,
-            record_manager_db_url=test_record_manager_db_url,
-            chroma_persist_directory=test_chromadb_path,
+            record_manager_db_url="sqlite:///:memory:",
+            chroma_persist_directory="./tests_chroma_db2",
         )
 
         retriever = builder.get_retriever()

@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "just-rag"
 version = "0.1.0"
-description = ""
+description = "Just do RAG without pain."
 readme = "README.md"
-authors = []
+authors = ["Samuel <samuelint@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -23,7 +23,7 @@ markdown = { version = "^3.6", optional = false }
 langchain-huggingface = "^0.0.3"
 
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pytest = "^8.2.2"
 pytest-watch = "^4.2.0"
 pytest-asyncio = "^0.23.7"
