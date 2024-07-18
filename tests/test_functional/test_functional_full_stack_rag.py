@@ -3,10 +3,10 @@ import shutil
 import pytest
 
 from just_rag import CitedClassicRag
-from just_rag.vector_store.just_chroma_vector_store_builder import (
-    JustChromaVectorStoreBuilder,
-)
 from tests.llm import openai_llm
+from tests.test_functional.simple_huggingface_chroma_vector_store_builder import (
+    SimpleChromaVectorStoreBuilder,
+)
 
 
 assets_directory_path = os.path.abspath(
@@ -38,9 +38,9 @@ class TestEmbedding:
         ]
 
     def test_embedding(self, documents_paths: list[str]):
-        builder = JustChromaVectorStoreBuilder(
+        builder = SimpleChromaVectorStoreBuilder(
             file_or_urls=documents_paths,
-            collection_name="test",
+            collection_name="charte_canadienne_des_droits_et_libertes",
             record_manager_db_url=test_record_manager_db_url,
             chroma_persist_directory=test_chromadb_path,
         )
@@ -68,7 +68,7 @@ class TestVectorStoreSync:
         ]
 
     def test_not_syncing_does_not_load_documents(self, documents_paths: list[str]):
-        builder = JustChromaVectorStoreBuilder(
+        builder = SimpleChromaVectorStoreBuilder(
             collection_name="vector_store_not_synced",
             file_or_urls=documents_paths,
             record_manager_db_url="sqlite:///:memory:",
@@ -87,7 +87,7 @@ class TestVectorStoreSync:
         assert "non" in result["result"].result.lower()
 
     def test_vector_store_content_is_persisted(self, documents_paths: list[str]):
-        builder1 = JustChromaVectorStoreBuilder(
+        builder1 = SimpleChromaVectorStoreBuilder(
             collection_name="vector_store_sync",
             file_or_urls=documents_paths,
             record_manager_db_url=test_record_manager_db_url,
@@ -95,7 +95,7 @@ class TestVectorStoreSync:
         )
         builder1.sync()
 
-        builder2 = JustChromaVectorStoreBuilder(
+        builder2 = SimpleChromaVectorStoreBuilder(
             collection_name="vector_store_sync",
             file_or_urls=documents_paths,
             record_manager_db_url=test_record_manager_db_url,
