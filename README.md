@@ -1,5 +1,7 @@
 # Just RAG
 
+[![PyPI version](https://badge.fury.io/py/just-rag.svg)](https://badge.fury.io/py/just-rag)
+
 This library simplifies the process of using Retrieval-Augmented Generation (RAG). Focus on the result you want to achieve and let the library handle the rest.
 
 - Support Citation out of the box!
@@ -9,7 +11,31 @@ This library simplifies the process of using Retrieval-Augmented Generation (RAG
 
 If you find this project useful, please give it a star ⭐!
 
-## Full Stack Rag
+---
+
+## Usage
+
+##### pip
+
+```bash
+# Only the core package
+pip install just-rag
+
+# When using universal loader ("pypdf", "unstructured", "markdown")
+pip install just-rag just-rag[universal_loader]
+```
+
+##### poetry
+
+```bash
+# Only the core package
+poetry add just-rag
+
+# When using universal loader ("pypdf", "unstructured", "markdown")
+poetry add just-rag "just-rag[universal_loader]"
+```
+
+### Full Stack Rag
 
 Persist & cync documents when file changes.
 
@@ -35,9 +61,9 @@ assert "non" in result["result"].result.lower()
 
 Full example: [tests/test_functional/test_functional_full_stack_rag.py](tests/test_functional/test_functional_full_stack_rag.py)
 
-## Remote inference
+### Remote inference
 
-### Classic Rag
+#### Classic Rag
 
 ```python
 from just_rag import ClassicRag
@@ -55,7 +81,7 @@ print(result["result"])
 
 Full example: [tests/test_functional/test_functional_classic_rag.py](tests/test_functional/test_functional_classic_rag.py)
 
-### Classic Rag with Citation
+#### Classic Rag with Citation
 
 Pass a custom `Citation` (inheriting from `BaseCitation`) class to automatically gather citation data from your RAG.
 Field on the `Citation` class matching a retreived `Document` metadata are automatically matched.
@@ -95,7 +121,7 @@ print(result["result"].citations)
 
 Full example: [tests/test_functional/test_functional_cited_classic_rag.py](tests/test_functional/test_functional_cited_classic_rag.py)
 
-### Agentic RAG - Self Rag (with Citation)
+#### Agentic RAG - Self Rag (with Citation)
 
 ```python
 from just_rag import SelfRagGraphBuilder
@@ -137,9 +163,9 @@ print(result["result"].citations[0].page_content)
 
 Full example: [tests/test_functional/test_functional_self_rag.py](tests/test_functional/test_functional_self_rag.py)
 
-## Local Inference
+### Local Inference
 
-### Using LLamaCPP & langchain_llamacpp_chat_model
+#### Using LLamaCPP & langchain_llamacpp_chat_model
 
 ```python
 from just_rag import SelfRagGraphBuilder

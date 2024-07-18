@@ -1,6 +1,6 @@
+from typing import Optional
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv, find_dotenv
-from llama_cpp import Optional
 
 from just_rag.llm_factory import LLMFactory
 
