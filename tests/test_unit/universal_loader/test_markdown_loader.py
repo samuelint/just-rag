@@ -1,5 +1,5 @@
 import pytest
-from just_rag.universal_loader import MarkdownLoader
+from just_rag.document_loader.universal_loader import MarkdownLoader
 
 
 @pytest.fixture

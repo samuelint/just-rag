@@ -46,7 +46,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_core.documents import Document
 from langchain_community.vectorstores.utils import filter_complex_metadata
 
-from just_rag.universal_loader.universal_document_loader import UniversalDocumentLoader
+from just_rag.document_loader.universal_loader.universal_document_loader import UniversalDocumentLoader
 from just_rag.vector_store.just_chroma_vector_store_builder import (
     JustChromaVectorStoreBuilder,
 )
