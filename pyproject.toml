@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "just-rag"
-version = "0.2.0"
+version = "0.3.0"
 description = "Just do RAG without pain."
 readme = "README.md"
 authors = ["Samuel <samuelint@gmail.com>"]
