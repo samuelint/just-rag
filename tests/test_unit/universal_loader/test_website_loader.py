@@ -1,6 +1,6 @@
 import pytest
 
-from just_rag.universal_loader import WebsiteLoader
+from just_rag.document_loader.universal_loader import WebsiteLoader
 
 
 @pytest.fixture

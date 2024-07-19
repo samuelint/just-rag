@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from just_rag.universal_loader import UniversalDocumentLoader
+from just_rag.document_loader.universal_loader import UniversalDocumentLoader
 
 assets_directory_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "assets")

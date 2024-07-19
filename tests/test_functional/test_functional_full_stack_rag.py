@@ -1,30 +1,22 @@
 import os
-import shutil
 import pytest
 
 from just_rag import CitedClassicRag
-from just_rag.vector_store.just_chroma_vector_store_builder import (
-    JustChromaVectorStoreBuilder,
-)
 from tests.llm import openai_llm
-
-
-assets_directory_path = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "assets")
+from tests.test_functional.simple_huggingface_chroma_vector_store_builder import (
+    SimpleHuggingFaceChromaVectorStoreBuilder,
 )
-
-test_chromadb_path = "./tests_chroma_db"
-test_record_manager_db_path = "tests_record_manager_cache.sql"
-test_record_manager_db_url = f"sqlite:///{test_record_manager_db_path}"
+from tests.test_functional.utils import (
+    delete_test_records,
+    test_record_manager_db_url,
+    test_chromadb_path,
+    assets_directory_path,
+)
 
 
 @pytest.fixture(scope="session", autouse=True)
 def delete_files_before_test():
-    if os.path.exists(test_chromadb_path):
-        shutil.rmtree(test_chromadb_path)
-
-    if os.path.exists(test_record_manager_db_path):
-        os.remove(test_record_manager_db_path)
+    delete_test_records()
 
 
 class TestEmbedding:
@@ -38,9 +30,9 @@ class TestEmbedding:
         ]
 
     def test_embedding(self, documents_paths: list[str]):
-        builder = JustChromaVectorStoreBuilder(
+        builder = SimpleHuggingFaceChromaVectorStoreBuilder(
             file_or_urls=documents_paths,
-            collection_name="test",
+            collection_name="charte_canadienne_des_droits_et_libertes",
             record_manager_db_url=test_record_manager_db_url,
             chroma_persist_directory=test_chromadb_path,
         )
@@ -68,7 +60,7 @@ class TestVectorStoreSync:
         ]
 
     def test_not_syncing_does_not_load_documents(self, documents_paths: list[str]):
-        builder = JustChromaVectorStoreBuilder(
+        builder = SimpleHuggingFaceChromaVectorStoreBuilder(
             collection_name="vector_store_not_synced",
             file_or_urls=documents_paths,
             record_manager_db_url="sqlite:///:memory:",
@@ -87,7 +79,7 @@ class TestVectorStoreSync:
         assert "non" in result["result"].result.lower()
 
     def test_vector_store_content_is_persisted(self, documents_paths: list[str]):
-        builder1 = JustChromaVectorStoreBuilder(
+        builder1 = SimpleHuggingFaceChromaVectorStoreBuilder(
             collection_name="vector_store_sync",
             file_or_urls=documents_paths,
             record_manager_db_url=test_record_manager_db_url,
@@ -95,7 +87,7 @@ class TestVectorStoreSync:
         )
         builder1.sync()
 
-        builder2 = JustChromaVectorStoreBuilder(
+        builder2 = SimpleHuggingFaceChromaVectorStoreBuilder(
             collection_name="vector_store_sync",
             file_or_urls=documents_paths,
             record_manager_db_url=test_record_manager_db_url,

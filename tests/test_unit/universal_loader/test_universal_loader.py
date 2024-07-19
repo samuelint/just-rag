@@ -1,8 +1,8 @@
 import pytest
 from decoy import Decoy, matchers
 from langchain_core.documents import Document
-from just_rag.universal_loader.loader import FileOrUrlLoader
-from just_rag.universal_loader import UniversalDocumentLoader
+from just_rag.document_loader.universal_loader.loader import FileOrUrlLoader
+from just_rag.document_loader.universal_loader import UniversalDocumentLoader
 
 
 @pytest.fixture
