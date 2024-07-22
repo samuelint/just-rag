@@ -32,6 +32,7 @@ class JustChromaVectorStoreBuilder(BaseVectorStoreBuilder):
 
     def _create_vector_store(self, embedding: Embeddings) -> VectorStore:
         return Chroma(
+            collection_name=self.collection_name,
             persist_directory=self.chroma_persist_directory,
             embedding_function=embedding,
         )
